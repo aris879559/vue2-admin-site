@@ -23,7 +23,7 @@ export default {
 
 <!-- 覆盖默认配置 -->
 <style lang="less">
-  html,body,h3 {
+  html,body,h3,p {
     margin: 0;
     padding: 0;
   }

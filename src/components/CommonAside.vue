@@ -30,9 +30,16 @@
     width: 200px;
     min-height: 400px;
   }
+
   .el-menu {
+    // position: fixed;
+    // top: 0;
+    // bottom: 0;
+    // overflow-y: auto;
     height: 100vh;
     border-right: none;
+    // overflow-y: auto;
+    background-color: #545c64;
     h3 {
       color: #fff;
       text-align: center;
@@ -41,60 +48,13 @@
       font-weight: 400px;
     }
   }
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
 </style>
 
 <script>
-  export default {
+import Cookie from "js-cookie";
+export default {
     data() {
-      return {
-        menuData: [
-          {
-            path: '/',
-            name: 'home',
-            label: '首页',
-            icon: 's-home',
-            url: 'Home/Home'
-          },
-          {
-            path: '/mall',
-            name: 'mall',
-            label: '商品管理',
-            icon: 'video-play',
-            url: 'MallManage/MallManage'
-          },
-          {
-            path: '/user',
-            name: 'user',
-            label: '用户管理',
-            icon: 'user',
-            url: 'UserManage/UserManage'
-          },
-          {
-            label: '其他',
-            icon: 'location',
-            children: [
-              {
-                path: '/page1',
-                name: 'page1',
-                label: '页面1',
-                icon: 'setting',
-                url: 'Other/PageOne'
-              },
-              {
-                path: '/page2',
-                name: 'page2',
-                label: '页面2',
-                icon: 'setting',
-                url: 'Other/PageTwo'
-              },
-            ]
-          },
-        ]
-      };
+      return {};
     },
     methods: {
       handleOpen(key, keyPath) {
@@ -106,10 +66,12 @@
       // 点击菜单
       clickMenu(item) {
         console.log(item)
-        // 当页面的路由与跳转路由不一致才允许跳转
+        // 当页面的路由与跳转路由不一致才允许跳转,防止自己跳自己的报错
         if (this.$route.path !== item.path && !(this.$route.path === '/home' && (item.path === '/')) ) {
           this.$router.push(item.path)
         }
+        // 面包屑
+        this.$store.commit('selectMenu', item)
       }
     },
     computed: {
@@ -121,9 +83,14 @@
       hasChildren() {
         return this.menuData.filter(item => item.children)
       },
+      menuData() {
+        // 判断当前数据，如果缓存中没有从当前store中获取
+        return JSON.parse(Cookie.get('menu')) || this.$store.state.tab.menu
+        // return this.$store.state.tab.menu
+      },
       isCollapse() {
         return this.$store.state.tab.isCollapse
-      }
+      },
     }
   }
 </script>
